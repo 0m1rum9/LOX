@@ -1,0 +1,24 @@
+<main class="main">
+
+  <section class="categories">
+    <div class="category" *ngFor="let cat of categories">
+      <img [src]="cat.image" [alt]="cat.name" class="category-icon" />
+      <span class="category-name">{{ cat.name }}</span>
+    </div>
+  </section>
+
+  <section class="feed">
+    <h2 class="feed-title">Рекомендации</h2>
+    <div class="listings-grid">
+      <div class="listing-card" *ngFor="let item of listings">
+        <img [src]="item.image" [alt]="item.title" class="listing-img" />
+        <div class="listing-info">
+          <p class="listing-price">{{ item.price | number }} ₸</p>
+          <h3 class="listing-title">{{ item.title }}</h3>
+          <p class="listing-meta">{{ item.city }} · {{ item.category }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
