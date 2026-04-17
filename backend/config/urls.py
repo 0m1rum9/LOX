@@ -18,9 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from users.urls import urlpatterns as users_urls
-
+from auth.urls import urlpatterns as auth_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("auth/", include(users_urls)),
+    path("users/", include(users_urls)),
+    path("auth/", include(auth_urls)),
 ]
