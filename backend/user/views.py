@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from users.models import User
-from users.serializers import UserSerializer
+from user.models import User
+from user.serializers import UserSerializer
 
 
 @api_view(http_method_names=[HTTPMethod.GET])

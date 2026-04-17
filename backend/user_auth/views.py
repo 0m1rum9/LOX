@@ -3,7 +3,7 @@ from http import HTTPMethod, HTTPStatus
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from users.serializers import UserSerializer
+from user.serializers import UserSerializer
 
 
 @api_view(http_method_names=[HTTPMethod.POST])

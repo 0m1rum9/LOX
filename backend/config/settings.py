@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "users",
+    "user",
     "rest_framework_simplejwt.token_blacklist",
-    "users_auth",
+    "user_auth",
 ]
 
 REST_FRAMEWORK = {
@@ -125,4 +125,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "user.User"
