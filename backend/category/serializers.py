@@ -3,7 +3,9 @@ from category.models import Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    parent_id = serializers.BigIntegerField(write_only=True, required=False)
+    parent_id = serializers.BigIntegerField(
+        write_only=True, required=False, allow_null=True
+    )
 
     class Meta:
         # fields = ["name", "path", ]

@@ -8,6 +8,7 @@ from category.models import Category
 from category.serializers import CategorySerializer
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 
+
 # TODO replace all the classes with ModelViewSet
 class CategoryView(APIView):
     def get(self, request: Request) -> Response:
@@ -21,7 +22,7 @@ class CategoryView(APIView):
 
         if serializer.is_valid():
             data = cast(dict[str, object], serializer.validated_data)
-            parent_id = data.pop("parent_id")
+            parent_id = data.pop("parent_id", None)
 
             if parent_id is None:
                 return Response(
