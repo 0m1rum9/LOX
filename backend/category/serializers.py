@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from rest_framework.fields import ListField
 from category.models import Category
+from attribute.models import Attribute
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -8,7 +10,13 @@ class CategorySerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        # fields = ["name", "path", ]
-        fields = ["id", "name", "path", "parent_id"]
+        fields = ["id", "name", "path", "parent_id", "attributes"]
         model = Category
         read_only_fields = ["path", "depth"]
+
+
+class CategoryTreeSerializer(serializers.Serializer):
+    id = serializers.BigIntegerField()
+    name = serializers.CharField()
+    path = serializers.CharField()
+    children = serializers.ListField()
