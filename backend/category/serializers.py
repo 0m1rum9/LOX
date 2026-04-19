@@ -4,6 +4,7 @@ from category.models import Category
 from attribute.models import Attribute
 
 
+# TODO: make a validation for a subcategory not having parent category attributes
 class CategorySerializer(serializers.ModelSerializer):
     parent_id = serializers.BigIntegerField(
         write_only=True, required=False, allow_null=True

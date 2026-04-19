@@ -1,5 +1,6 @@
-from http import HTTPStatus
+from http import HTTPMethod, HTTPStatus
 from typing import cast
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,6 +13,11 @@ from attribute.serializers import AttributeSerializer
 
 # TODO replace all the classes with ModelViewSet
 class CategoryView(APIView):
+    def get_permissions(self):
+        if self.request.method == HTTPMethod.POST:
+            return [IsAuthenticated()]
+        return [AllowAny()]
+
     def get(self, request: Request) -> Response:
         def build_tree(nodes):
             tree = []
@@ -64,6 +70,11 @@ class CategoryView(APIView):
 
 
 class CategoryDetailView(RetrieveUpdateDestroyAPIView):
+    def get_permissions(self):
+        if self.request.method in [HTTPMethod.PUT, HTTPMethod.DELETE, HTTPMethod.PATCH]:
+            return [IsAuthenticated()]
+        return [AllowAny()]
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
