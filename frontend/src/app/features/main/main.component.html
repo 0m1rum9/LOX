@@ -1,7 +1,7 @@
 <main class="main">
 
   <section class="categories">
-    <div class="category" *ngFor="let cat of categories">
+   <div class="category" *ngFor="let cat of categories" (click)="onCategoryClick(cat.name)">
       <img [src]="cat.image" [alt]="cat.name" class="category-icon" />
       <span class="category-name">{{ cat.name }}</span>
     </div>

@@ -1,0 +1,32 @@
+<div class="register-page">
+  <div class="register-box">
+    <h2>Регистрация</h2>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+    <input
+      [(ngModel)]="username"
+      type="text"
+      placeholder="Имя пользователя"
+      class="input"
+    />
+
+    <input
+      [(ngModel)]="email"
+      type="email"
+      placeholder="Email"
+      class="input"
+    />
+
+    <input
+      [(ngModel)]="password"
+      type="password"
+      placeholder="Пароль"
+      class="input"
+    />
+
+    <button (click)="onRegister()" class="btn">Зарегистрироваться</button>
+
+    <a routerLink="/login" class="link">Уже есть аккаунт? Войти</a>
+  </div>
+</div>

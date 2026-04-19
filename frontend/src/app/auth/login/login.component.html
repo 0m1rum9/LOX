@@ -1,0 +1,25 @@
+<div class="login-page">
+  <div class="login-box">
+    <h2>Войти</h2>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+    <input
+      [(ngModel)]="email"
+      type="email"
+      placeholder="Email"
+      class="input"
+    />
+
+    <input
+      [(ngModel)]="password"
+      type="password"
+      placeholder="Пароль"
+      class="input"
+    />
+
+    <button (click)="onLogin()" class="btn">Войти</button>
+
+    <a routerLink="/register" class="link">Нет аккаунта? Зарегистрироваться</a>
+  </div>
+</div>
