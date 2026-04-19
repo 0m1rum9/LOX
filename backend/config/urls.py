@@ -21,6 +21,7 @@ from user.urls import urlpatterns as users_urls
 from user_auth.urls import urlpatterns as auth_urls
 from category.urls import urlpatterns as category_urls
 from attribute.urls import urlpatterns as attribute_urls
+from ad.urls import urlpatterns as ad_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -28,4 +29,5 @@ urlpatterns = [
     path("auth/", include(auth_urls)),
     path("categories/", include(category_urls)),
     path("attributes/", include(attribute_urls)),
+    path("ads/", include(ad_urls)),
 ]
