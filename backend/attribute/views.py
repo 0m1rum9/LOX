@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.request import Request
@@ -13,6 +14,8 @@ from http import HTTPMethod, HTTPStatus
 
 
 class AttributeListView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request: Request) -> Response:
         return Response(
             AttributeSerializer(Attribute.objects.all(), many=True).data,
@@ -31,6 +34,7 @@ class AttributeListView(APIView):
 
 
 class AttributeDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = AttributeSerializer
     lookup_url_kwarg = "id"
     lookup_field = "id"
