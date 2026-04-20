@@ -1,40 +1,40 @@
 <div class="search-page">
+  <div class="search-bar">
+    <input
+      [(ngModel)]="query"
+      placeholder="Поиск по объявлениям..."
+      class="search-input"
+    />
+    <button (click)="onSearch()" class="search-btn">Найти</button>
+  </div>
 
-    <div class="search-bar">
-        <input 
-        [(ngModel)]="query"
-        placeholder="Поиск по объявлениям..."
-        class="search-input"
-        />
-        <button (click)="onSearch()" class="search-btn">Найти</button>
-    </div>
-
-    <div class="search-layout">
-
-        <aside class="filters">
-            <h3>Категории</h3>
-            <div 
-             *ngFor="let cat of categories"
-             class="filter-item"
-             [class.active]="selectedCategory === cat"
-             (click)="onCategorySelect(cat)">
-            {{ cat }}
-            </div>
-        </aside>
+  <div class="search-layout">
+    <aside class="filters">
+      <h3>Категории</h3>
+      <div
+        *ngFor="let cat of categories"
+        class="filter-item"
+        [class.active]="selectedCategoryIds.includes(cat.id)"
+        (click)="onCategorySelect(cat)">
+        {{ cat.name }}
+      </div>
+    </aside>
 
     <div class="results">
-       <p class="result-count">Найдено: {{ filteredListings.length }}</p>
-        <div class="listing-row" *ngFor="let item of filteredListings" (click)="onListingClick(item.id)">
-            <div class="row-placeholder" *ngIf="!item.photo"></div>
-            <img [src]="item.photo" [alt]="item.title" class="row-img" *ngIf="item.photo" />
-            <div class="row-info">
-                <p class="row-price" *ngIf="item.price">{{ item.price | number }} ₸</p>
-                <h3 class="row-title">{{ item.title }}</h3>
-                <p class="row-description">{{ item.description }}</p>
-                <p class="row-meta" *ngIf="item.category">Категория: {{ item.category }}</p>
-            </div>
-        </div>
-       <p *ngIf="filteredListings.length === 0" class="no-results">Ничего не найдено</p>
-    </div>
+      <p class="result-count">Найдено: {{ filteredListings.length }}</p>
 
+      <div class="listing-row" *ngFor="let item of filteredListings" (click)="onListingClick(item.id)">
+        <div class="row-placeholder" *ngIf="!item.photo"></div>
+        <img [src]="item.photo" [alt]="item.title" class="row-img" *ngIf="item.photo" />
+        <div class="row-info">
+          <p class="row-price" *ngIf="item.price">{{ item.price | number }} ₸</p>
+          <h3 class="row-title">{{ item.title }}</h3>
+          <p class="row-description">{{ item.description }}</p>
+          <p class="row-meta" *ngIf="item.category">Категория: {{ item.category }}</p>
+        </div>
+      </div>
+
+      <p *ngIf="filteredListings.length === 0" class="no-results">Ничего не найдено</p>
     </div>
+  </div>
+</div>

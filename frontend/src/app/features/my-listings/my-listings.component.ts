@@ -12,7 +12,7 @@ interface Listing {
   price?: number;
   category?: string;
   city?: string;
-  image?: string;
+  photo?: string;
   status?: string;
   user?: number;
   [key: string]: any;

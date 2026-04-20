@@ -1,22 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgFor, DecimalPipe, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListingsService } from '../../core/services/listings.service';
 import { CategoriesService } from '../../core/services/categories.service';
-import { ChangeDetectorRef } from '@angular/core';
 
 interface Listing {
-  id: number;
-  title: string;
-  description?: string;
-  price?: number;
-  category?: string;
-  city?: string;
-  photo?: string;
-  status?: string;
-  user?: number;
-  [key: string]: any;
+  id: number
+  title: string
+  description: string
+  price: number
+  category: number
+  photo: string | null
+  status: string
+  user: number
+}
+
+interface Category {
+  id: number
+  name: string
+  parentId: number | null
 }
 
 @Component({
@@ -27,99 +30,102 @@ interface Listing {
   styleUrl: './search.component.css',
 })
 export class SearchComponent implements OnInit {
- query = ''
- selectedCategory = ''
- allListings: Listing[] = []
- categories: string[] = []
- isLoading = true
- categoriesLoading = true
+  query = ''
+  selectedCategoryId: number | null = null
+  allListings: Listing[] = []
+  categories: Category[] = []
+  isLoading = true
+  error = ''
 
- constructor(
-   private route: ActivatedRoute,
-   private router: Router,
-   private listingsService: ListingsService,
-   private categoriesService: CategoriesService,
-   private cdr: ChangeDetectorRef
- ) {
-   this.route.queryParams.subscribe(params => {
-     this.selectedCategory = params['category'] ?? '';
-   });
- }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private listingsService: ListingsService,
+    private categoriesService: CategoriesService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
- ngOnInit() {
-   console.log('SearchComponent ngOnInit');
-   this.loadCategories();
-   this.loadListings();
- }
+  ngOnInit() {
+    this.loadCategories()
+    this.loadListings()
+  }
 
- loadCategories() {
-   this.categoriesService.getAll().subscribe({
-     next: (data) => {
-       // Flatten hierarchical categories to string array
-       this.categories = this.flattenCategories(data);
-       this.cdr.markForCheck();
-       this.categoriesLoading = false;
-     },
-     error: () => {
-       console.error('Failed to load categories');
-       this.categoriesLoading = false;
-     }
-   });
- }
+  loadCategories() {
+    this.categoriesService.getAll().subscribe({
+      next: (data) => {
+        this.categories = this.flattenCategories(data)
+        this.route.queryParams.subscribe(params => {
+  if (params['category']) {
+    const found = this.categories.find(c => c.name === params['category'])
+    if (found) {
+      this.selectedCategoryIds = this.getAllChildIds(found.id, this.categories)
+    }
+  }
+  this.cdr.detectChanges()
+        })
+      }
+    })
+  }
 
- private flattenCategories(categories: any[], result: string[] = []): string[] {
-   for (const cat of categories) {
-     result.push(cat.name);
-     if (cat.children && cat.children.length > 0) {
-       this.flattenCategories(cat.children, result);
-     }
-   }
-   return result;
- }
+  private flattenCategories(categories: any[], result: Category[] = []): Category[] {
+    for (const cat of categories) {
+      result.push({ id: cat.id, name: cat.name, parentId: cat.parentId })
+      if (cat.children && cat.children.length > 0) {
+        this.flattenCategories(cat.children, result)
+      }
+    }
+    return result
+  }
+selectedCategoryIds: number[] = []
+  loadListings() {
+    this.isLoading = true
+    this.error = ''
+    this.listingsService.getListings().subscribe({
+      next: (data) => {
+        this.allListings = data
+        this.isLoading = false
+        this.cdr.detectChanges()
+      },
+      error: () => {
+        this.error = 'Не удалось загрузить объявления'
+        this.isLoading = false
+        this.cdr.detectChanges()
+      }
+    })
+  }
 
- loadListings() {
-   this.isLoading = true;
-   console.log('Loading listings...');
-   this.listingsService.getListings().subscribe({
-     next: (data) => {
-       console.log('Listings loaded:', data);
-       console.log('Before assign, allListings:', this.allListings.length);
-       this.allListings = data;
-       console.log('After assign, allListings:', this.allListings.length);
-       this.cdr.markForCheck();
-       this.isLoading = false;
-     },
-     error: (err) => {
-       console.error('Failed to load listings:', err);
-       this.isLoading = false;
-     }
-   });
- }
-
- onListingClick(id: number) {
-  this.router.navigate(['/listing', id])
+  get filteredListings() {
+  return this.allListings.filter(item => {
+    const matchesQuery = !this.query ||
+      item.title.toLowerCase().includes(this.query.toLowerCase())
+    const matchesCategory = this.selectedCategoryIds.length === 0 ||
+      this.selectedCategoryIds.includes(item.category)
+    return matchesQuery && matchesCategory
+  })
+  }
+  private getAllChildIds(categoryId: number, allCategories: Category[]): number[] {
+  const ids: number[] = [categoryId]
+  const children = allCategories.filter(c => c.parentId === categoryId)
+  for (const child of children) {
+    ids.push(...this.getAllChildIds(child.id, allCategories))
+  }
+  return ids
 }
 
- get filteredListings() {
-   const result = this.allListings.filter(item => {
-     const matchesQuery = !this.query || item.title.toLowerCase().includes(this.query.toLowerCase());
-     const matchesCategory = !this.selectedCategory || item.category === this.selectedCategory;
-     return matchesQuery && matchesCategory;
-   })
-   console.log('Filtered listings:', {
-     query: this.query,
-     selectedCategory: this.selectedCategory,
-     allCount: this.allListings.length,
-     filteredCount: result.length
-   });
-   return result;
- }
+  onSearch() {
+    this.cdr.detectChanges()
+  }
 
- onSearch() {
+ onCategorySelect(cat: Category) {
+  if (this.selectedCategoryIds.includes(cat.id)) {
+    this.selectedCategoryIds = []
+  } else {
+    this.selectedCategoryIds = this.getAllChildIds(cat.id, this.categories)
+  }
+  this.cdr.detectChanges()
+}
 
- }
-
- onCategorySelect(category: string) {
-    this.selectedCategory = this.selectedCategory === category ? '' : category
- }
+  onListingClick(id: number) {
+    this.router.navigate(['/listing', id])
+  }
 }

@@ -21,8 +21,8 @@
   <div *ngIf="!isLoading && listings.length > 0" class="listings-list">
     <div class="listing-item" *ngFor="let item of listings">
       <div class="listing-card">
-        <div class="listing-img-placeholder" *ngIf="!item.image"></div>
-        <img [src]="item.image" [alt]="item.title" class="listing-img" *ngIf="item.image" />
+        <div class="listing-img-placeholder" *ngIf="!item.photo"></div>
+        <img [src]="item.photo" [alt]="item.title" class="listing-img" *ngIf="item.photo" />
         
         <div class="listing-info">
           <h3 class="listing-title">{{ item.title }}</h3>
