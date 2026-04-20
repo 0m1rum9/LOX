@@ -1,1 +1,44 @@
-<p>my-listings works!</p>
+<div class="my-listings-page">
+
+  <div class="page-header">
+    <h1>Мои объявления</h1>
+    <a routerLink="/create" class="create-btn">➕ Новое объявление</a>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    Загрузка объявлений...
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!isLoading && listings.length === 0 && !error" class="empty-state">
+    <p>У вас нет объявлений</p>
+    <a routerLink="/create" class="create-link">Создать первое объявление</a>
+  </div>
+
+  <div *ngIf="!isLoading && listings.length > 0" class="listings-list">
+    <div class="listing-item" *ngFor="let item of listings">
+      <div class="listing-card">
+        <div class="listing-img-placeholder" *ngIf="!item.image"></div>
+        <img [src]="item.image" [alt]="item.title" class="listing-img" *ngIf="item.image" />
+        
+        <div class="listing-info">
+          <h3 class="listing-title">{{ item.title }}</h3>
+          <p class="listing-description">{{ item.description }}</p>
+          <p class="listing-meta" *ngIf="item.category">Категория: {{ item.category }}</p>
+          <p class="listing-status">Статус: 
+            <span [class]="'status-' + (item.status || 'active')">{{ item.status || 'active' }}</span>
+          </p>
+        </div>
+
+        <div class="listing-actions">
+          <button class="action-btn view-btn" (click)="onListingClick(item.id)">Просмотр</button>
+          <button class="action-btn delete-btn" (click)="deleteListing(item.id)">Удалить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

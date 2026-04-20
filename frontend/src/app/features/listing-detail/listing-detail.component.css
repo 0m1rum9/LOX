@@ -1,0 +1,69 @@
+.detail-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.detail-inner {
+  display: flex;
+  gap: 40px;
+}
+
+.detail-img {
+  width: 500px;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+
+.detail-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-category {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+.detail-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.detail-price {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+}
+
+.detail-description {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.btn-contact {
+  padding: 14px;
+  background: #00aaff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.not-found {
+  text-align: center;
+  padding: 80px;
+  color: #888;
+  font-size: 18px;
+}

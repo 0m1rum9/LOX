@@ -24,12 +24,14 @@
 
     <div class="results">
        <p class="result-count">Найдено: {{ filteredListings.length }}</p>
-        <div class="listing-row" *ngFor="let item of filteredListings">
-            <img [src]="item.image" [alt]="item.title" class="row-img" />
+        <div class="listing-row" *ngFor="let item of filteredListings" (click)="onListingClick(item.id)">
+            <div class="row-placeholder" *ngIf="!item.image"></div>
+            <img [src]="item.image" [alt]="item.title" class="row-img" *ngIf="item.image" />
             <div class="row-info">
-                <p class="row-price">{{ item.price | number }} ₸</p>
+                <p class="row-price" *ngIf="item.price">{{ item.price | number }} ₸</p>
                 <h3 class="row-title">{{ item.title }}</h3>
-                <p class="row-meta">{{ item.city }} · {{ item.category }}</p>
+                <p class="row-description">{{ item.description }}</p>
+                <p class="row-meta" *ngIf="item.category">Категория: {{ item.category }}</p>
             </div>
         </div>
        <p *ngIf="filteredListings.length === 0" class="no-results">Ничего не найдено</p>

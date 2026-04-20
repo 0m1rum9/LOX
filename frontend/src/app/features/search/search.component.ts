@@ -1,53 +1,118 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgFor, DecimalPipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgFor, DecimalPipe, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ListingsService } from '../../core/services/listings.service';
+import { CategoriesService } from '../../core/services/categories.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface Listing {
   id: number;
   title: string;
-  price: number;
-  category: string;
-  city: string;
-  image: string;
+  description?: string;
+  price?: number;
+  category?: string;
+  city?: string;
+  image?: string;
+  status?: string;
+  user?: number;
+  [key: string]: any;
 }
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [FormsModule, NgFor, DecimalPipe],
+  imports: [FormsModule, NgFor, DecimalPipe, NgIf],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css',
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
  query = ''
  selectedCategory = ''
+ allListings: Listing[] = []
+ categories: string[] = []
+ isLoading = true
+ categoriesLoading = true
 
- constructor(private route: ActivatedRoute) {
+ constructor(
+   private route: ActivatedRoute,
+   private router: Router,
+   private listingsService: ListingsService,
+   private categoriesService: CategoriesService,
+   private cdr: ChangeDetectorRef
+ ) {
    this.route.queryParams.subscribe(params => {
      this.selectedCategory = params['category'] ?? '';
    });
  }
 
- categories = ['Электроника', 'Авто', 'Недвижимость', 'Одежда', 'Спорт', 'Дом и сад', 'Детские товары', 'Услуги']
+ ngOnInit() {
+   console.log('SearchComponent ngOnInit');
+   this.loadCategories();
+   this.loadListings();
+ }
 
- allListings: Listing[] = [
-   { id: 1, title: 'iPhone 17 Pro', price: 999, category: 'Электроника', city: 'Москва', image: 'https://via.placeholder.com/150' },
-   { id: 2, title: 'BMW X5', price: 50000, category: 'Авто', city: 'Санкт-Петербург', image: 'https://via.placeholder.com/150' },
-   { id: 3, title: 'Квартира на Абая', price: 200000, category: 'Недвижимость', city: 'Москва', image: 'https://via.placeholder.com/150' },
-   { id: 4, title: 'Куртка зимняя', price: 150, category: 'Одежда', city: 'Новосибирск', image: 'https://via.placeholder.com/150' },
-   { id: 5, title: 'Гантели 20 кг', price: 80, category: 'Спорт', city: 'Екатеринбург', image: 'https://via.placeholder.com/150' },
-   { id: 6, title: 'Садовая мебель', price: 300, category: 'Дом и сад', city: 'Казань', image: 'https://via.placeholder.com/150' },
-   { id: 7, title: 'Игрушки для детей', price: 50, category: 'Детские товары', city: 'Нижний Новгород', image: 'https://via.placeholder.com/150' },
-   { id: 8, title: 'Ремонт компьютеров', price: 100, category: 'Услуги', city: 'Москва', image: 'https://via.placeholder.com/150' },
- ]
+ loadCategories() {
+   this.categoriesService.getAll().subscribe({
+     next: (data) => {
+       // Flatten hierarchical categories to string array
+       this.categories = this.flattenCategories(data);
+       this.cdr.markForCheck();
+       this.categoriesLoading = false;
+     },
+     error: () => {
+       console.error('Failed to load categories');
+       this.categoriesLoading = false;
+     }
+   });
+ }
+
+ private flattenCategories(categories: any[], result: string[] = []): string[] {
+   for (const cat of categories) {
+     result.push(cat.name);
+     if (cat.children && cat.children.length > 0) {
+       this.flattenCategories(cat.children, result);
+     }
+   }
+   return result;
+ }
+
+ loadListings() {
+   this.isLoading = true;
+   console.log('Loading listings...');
+   this.listingsService.getListings().subscribe({
+     next: (data) => {
+       console.log('Listings loaded:', data);
+       console.log('Before assign, allListings:', this.allListings.length);
+       this.allListings = data;
+       console.log('After assign, allListings:', this.allListings.length);
+       this.cdr.markForCheck();
+       this.isLoading = false;
+     },
+     error: (err) => {
+       console.error('Failed to load listings:', err);
+       this.isLoading = false;
+     }
+   });
+ }
+
+ onListingClick(id: number) {
+  this.router.navigate(['/listing', id])
+}
 
  get filteredListings() {
-   return this.allListings.filter(item => {
-     const matchesQuery = item.title.toLowerCase().includes(this.query.toLowerCase());
+   const result = this.allListings.filter(item => {
+     const matchesQuery = !this.query || item.title.toLowerCase().includes(this.query.toLowerCase());
      const matchesCategory = !this.selectedCategory || item.category === this.selectedCategory;
      return matchesQuery && matchesCategory;
    })
+   console.log('Filtered listings:', {
+     query: this.query,
+     selectedCategory: this.selectedCategory,
+     allCount: this.allListings.length,
+     filteredCount: result.length
+   });
+   return result;
  }
 
  onSearch() {

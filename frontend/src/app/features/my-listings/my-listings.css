@@ -1,0 +1,220 @@
+.my-listings-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  gap: 16px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.create-btn {
+  padding: 12px 20px;
+  background: #00aaff;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.create-btn:hover {
+  background: #0099dd;
+}
+
+.loading, .empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+.empty-state {
+  background: #f9f9f9;
+  border-radius: 12px;
+}
+
+.empty-state p {
+  margin-bottom: 16px;
+}
+
+.create-link {
+  color: #00aaff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.create-link:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  max-width: 600px;
+  margin: 0 auto 24px;
+  padding: 20px;
+  background: #ffe6e6;
+  border: 1px solid #ff4444;
+  border-radius: 12px;
+  color: #c00;
+  font-size: 15px;
+}
+
+.listings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.listing-item {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.listing-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  align-items: center;
+}
+
+.listing-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.listing-img-placeholder {
+  width: 120px;
+  height: 120px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.listing-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.listing-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #111;
+}
+
+.listing-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listing-meta {
+  font-size: 13px;
+  color: #888;
+  margin: 0 0 8px;
+}
+
+.listing-status {
+  font-size: 13px;
+  margin: 0;
+  color: #666;
+}
+
+.status-active {
+  color: #00aa00;
+  font-weight: 600;
+}
+
+.status-inactive {
+  color: #ff6600;
+  font-weight: 600;
+}
+
+.status-archived {
+  color: #888;
+  font-weight: 600;
+}
+
+.listing-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  border-color: #00aaff;
+  color: #00aaff;
+}
+
+.view-btn:hover {
+  border-color: #00aaff;
+  color: #00aaff;
+}
+
+.edit-btn:hover {
+  border-color: #ff9900;
+  color: #ff9900;
+}
+
+.delete-btn:hover {
+  border-color: #ff4444;
+  color: #ff4444;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .create-btn {
+    text-align: center;
+  }
+
+  .listing-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .listing-img, .listing-img-placeholder {
+    width: 100%;
+    height: 200px;
+  }
+
+  .listing-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

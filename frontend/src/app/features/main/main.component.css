@@ -64,6 +64,12 @@
   object-fit: cover;
 }
 
+.listing-img-placeholder {
+  width: 100%;
+  height: 160px;
+  background: #f0f0f0;
+}
+
 .listing-info { padding: 12px; }
 
 .listing-price {
@@ -77,6 +83,15 @@
   font-size: 15px;
   color: #333;
   margin: 0 0 6px;
+}
+
+.listing-description {
+  font-size: 13px;
+  color: #666;
+  margin: 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .listing-meta {

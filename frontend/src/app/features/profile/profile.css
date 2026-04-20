@@ -1,0 +1,93 @@
+.profile-page {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 32px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  background: #00aaff;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-info h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.user-info p {
+  margin: 0 0 4px;
+  color: #666;
+  font-size: 15px;
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-btn {
+  padding: 16px 20px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #333;
+  display: block;
+  transition: box-shadow 0.2s;
+}
+
+.action-btn:hover {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.logout {
+  color: #ff4444;
+  border-color: #ffdddd;
+  text-align: left;
+  width: 100%;
+  background: #fff;
+}
+
+.loading {
+  text-align: center;
+  padding: 80px;
+  color: #666;
+  font-size: 16px;
+}
+
+.error-message {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #ffe6e6;
+  border: 1px solid #ff4444;
+  border-radius: 12px;
+  color: #c00;
+  font-size: 15px;
+  display: block;
+}

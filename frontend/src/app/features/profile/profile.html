@@ -1,1 +1,32 @@
-<p>profile works!</p>
+<div class="profile-page">
+
+  <div *ngIf="isLoading" class="loading">
+    Загрузка профиля...
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="user && !isLoading" class="profile-card">
+    <div class="avatar">{{ user.username[0] }}</div>
+    <div class="user-info">
+      <h2>{{ user.username }}</h2>
+      <p>{{ user.email }}</p>
+      <p *ngIf="user.phone">{{ user.phone }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="user && !isLoading" class="profile-actions">
+    <a routerLink="/my-listings" class="action-btn">
+      📋 Мои объявления
+    </a>
+    <a routerLink="/create" class="action-btn">
+      ➕ Подать объявление
+    </a>
+    <button (click)="onLogout()" class="action-btn logout">
+      🚪 Выйти
+    </button>
+  </div>
+
+</div>

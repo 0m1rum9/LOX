@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { tap, BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:8000'
+  private apiUrl = 'http://172.20.10.4:8000'
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -17,6 +19,7 @@ export class AuthService {
       .pipe(tap(res => {
         localStorage.setItem('access', res.access)
         localStorage.setItem('refresh', res.refresh)
+        this.isAuthenticatedSubject.next(true);
       }))
   }
 
@@ -26,14 +29,49 @@ export class AuthService {
       .pipe(tap(() => {
         localStorage.removeItem('access')
         localStorage.removeItem('refresh')
+        this.isAuthenticatedSubject.next(false);
+      }))
+  }
+
+  refresh() {
+    const refresh = localStorage.getItem('refresh')
+    if (!refresh) return null;
+    
+    return this.http.post<any>(`${this.apiUrl}/auth/refresh/`, { refresh })
+      .pipe(tap(res => {
+        localStorage.setItem('access', res.access)
       }))
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('access')
+    return this.hasToken();
+  }
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem('access');
   }
 
   getToken(): string | null {
     return localStorage.getItem('access')
+  }
+
+  decodeToken(): any {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+
+      const decoded = atob(parts[1]);
+      return JSON.parse(decoded);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  getCurrentUserId(): string | null {
+    const decoded = this.decodeToken();
+    return decoded ? decoded.user_id : null;
   }
 }
