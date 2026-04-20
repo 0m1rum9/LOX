@@ -1,18 +1,18 @@
-<div class="detail-page" *ngIf="listing">
+<div *ngIf="isLoading">Загрузка...</div>
 
-  <div class="detail-inner">
-    <img [src]="listing.photo" [alt]="listing.title" class="detail-img" />
-
-    <div class="detail-info">
-      <p class="detail-category">{{ listing.category }} </p>
-      <h1 class="detail-title">{{ listing.title }}</h1>
-      <p class="detail-description">{{ listing.description }}</p>
-      <button class="btn-contact">Написать продавцу</button>
-    </div>
-  </div>
-
+<div *ngIf="!isLoading && !listing">
+  Объявление не найдено
 </div>
 
-<!-- <div *ngIf="!listing" class="not-found">
-  Объявление не найдено
-</div> -->
+<div class="detail-page" *ngIf="!isLoading && listing">
+  <div class="detail-inner">
+    <img *ngIf="listing.photo" [src]="listing.photo" [alt]="listing.title" class="detail-img" />
+    <div *ngIf="!listing.photo" class="no-photo">Нет фото</div>
+    <div class="detail-info">
+      <p class="detail-category">{{ listing.category }}</p>
+      <h1 class="detail-title">{{ listing.title }}</h1>
+      <p class="detail-description">{{ listing.description }}</p>
+      <a href="https://youtu.be/dQw4w9WgXcQ?si=A9E1qAeOZJJqrKLr" target="_blank" class="btn-contact">Написать продавцу</a>
+    </div>
+  </div>
+</div>
