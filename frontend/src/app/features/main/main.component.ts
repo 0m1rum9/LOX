@@ -1,21 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgFor, DecimalPipe, NgIf } from '@angular/common';
 import { ListingsService } from '../../core/services/listings.service';
-import { CategoriesService, Category } from '../../core/services/categories.service';
-import { ChangeDetectorRef } from '@angular/core';
+import { CategoriesService } from '../../core/services/categories.service';
 
 interface Listing {
   id: number
   title: string
-  description?: string
-  price?: number
-  category?: string
-  city?: string
-  image?: string
-  status?: string
-  user?: number
-  [key: string]: any
+  description: string
+  price: number
+  category: number
+  photo: string | null
+  status: string
+  user: number
 }
 
 interface CategoryWithImage {
@@ -35,7 +32,18 @@ export class MainComponent implements OnInit {
   listings: Listing[] = []
   categories: CategoryWithImage[] = []
   isLoading = true
-  categoriesLoading = true
+  error = ''
+
+  private categoryIcons: { [key: string]: string } = {
+    'Электроника': 'https://img.icons8.com/?size=100&id=ZwGNoFXGbt9n&format=png&color=000000',
+    'Авто': 'https://img.icons8.com/?size=100&id=16553&format=png&color=000000',
+    'Недвижимость': 'https://img.icons8.com/?size=100&id=73&format=png&color=000000',
+    'Одежда': 'https://img.icons8.com/?size=100&id=105819&format=png&color=000000',
+    'Спорт': 'https://img.icons8.com/?size=100&id=59&format=png&color=000000',
+    'Дом и сад': 'https://img.icons8.com/?size=100&id=67307&format=png&color=000000',
+    'Детские товары': 'https://img.icons8.com/?size=100&id=34590&format=png&color=000000',
+    'Услуги': 'https://img.icons8.com/?size=100&id=XwzkraQQ32YR&format=png&color=000000'
+  }
 
   constructor(
     private router: Router,
@@ -45,67 +53,48 @@ export class MainComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadCategories();
-    this.loadListings();
+    this.loadCategories()
+    this.loadListings()
   }
 
   loadCategories() {
     this.categoriesService.getAll().subscribe({
       next: (data) => {
-        // Map API categories to display format with default icons
         this.categories = data.map(cat => ({
           id: cat.id,
           name: cat.name,
-          image: this.getCategoryIcon(cat.name)
-        }));
-        this.cdr.markForCheck();
-        this.categoriesLoading = false;
+          image: this.categoryIcons[cat.name] || this.categoryIcons['Электроника']
+        }))
+        this.cdr.detectChanges()
       },
       error: () => {
-        console.error('Failed to load categories');
-        this.categoriesLoading = false;
+        console.error('Не удалось загрузить категории')
       }
-    });
-  }
-
-  private getCategoryIcon(categoryName: string): string {
-    const icons: { [key: string]: string } = {
-      'Электроника': 'https://img.icons8.com/?size=100&id=ZwGNoFXGbt9n&format=png&color=000000',
-      'Авто': 'https://img.icons8.com/?size=100&id=16553&format=png&color=000000',
-      'Недвижимость': 'https://img.icons8.com/?size=100&id=73&format=png&color=000000',
-      'Одежда': 'https://img.icons8.com/?size=100&id=105819&format=png&color=000000',
-      'Спорт': 'https://img.icons8.com/?size=100&id=59&format=png&color=000000',
-      'Дом и сад': 'https://img.icons8.com/?size=100&id=67307&format=png&color=000000',
-      'Детские товары': 'https://img.icons8.com/?size=100&id=34590&format=png&color=000000',
-      'Услуги': 'https://img.icons8.com/?size=100&id=XwzkraQQ32YR&format=png&color=000000'
-    };
-    return icons[categoryName] || 'https://img.icons8.com/?size=100&id=ZwGNoFXGbt9n&format=png&color=000000';
+    })
   }
 
   loadListings() {
-    this.isLoading = true;
-    console.log('Loading listings for main page...');
+    this.isLoading = true
+    this.error = ''
     this.listingsService.getListings().subscribe({
       next: (data) => {
-        console.log('Main page listings loaded:', data);
-        console.log('First listing keys:', data.length > 0 ? Object.keys(data[0]) : 'no data');
-        console.log('First listing:', data.length > 0 ? data[0] : 'no data');
-        this.listings = data.slice(0, 6);
-        this.cdr.markForCheck();
-        this.isLoading = false;
+        this.listings = data
+        this.isLoading = false
+        this.cdr.detectChanges()
       },
-      error: (err) => {
-        console.error('Failed to load listings for main:', err);
-        this.isLoading = false;
+      error: () => {
+        this.error = 'Не удалось загрузить объявления'
+        this.isLoading = false
+        this.cdr.detectChanges()
       }
-    });
+    })
   }
 
-  onCategoryClick(category: string) {
-    this.router.navigate(['/search'], { queryParams: { category } });
+  onCategoryClick(categoryName: string) {
+    this.router.navigate(['/search'], { queryParams: { category: categoryName } })
   }
 
   onListingClick(id: number) {
-  this.router.navigate(['/listing', id])
+    this.router.navigate(['/listing', id])
   }
 }

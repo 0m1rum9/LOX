@@ -1,7 +1,7 @@
 <main class="main">
 
-  <section class="categories">
-   <div class="category" *ngFor="let cat of categories" (click)="onCategoryClick(cat.name)">
+  <section class="categories" *ngIf="categories.length > 0">
+    <div class="category" *ngFor="let cat of categories" (click)="onCategoryClick(cat.name)">
       <img [src]="cat.image" [alt]="cat.name" class="category-icon" />
       <span class="category-name">{{ cat.name }}</span>
     </div>
@@ -9,18 +9,22 @@
 
   <section class="feed">
     <h2 class="feed-title">Рекомендации</h2>
-    <div class="listings-grid">
+
+    <p *ngIf="isLoading">Загрузка...</p>
+    <p *ngIf="error" class="error">{{ error }}</p>
+
+    <div class="listings-grid" *ngIf="!isLoading && !error">
       <div class="listing-card" *ngFor="let item of listings" (click)="onListingClick(item.id)">
-        <div class="listing-img-placeholder" *ngIf="!item.image"></div>
-        <img [src]="item.image" [alt]="item.title" class="listing-img" *ngIf="item.image" />
+        <img *ngIf="item.photo" [src]="item.photo" [alt]="item.title" class="listing-img" />
+        <div *ngIf="!item.photo" class="listing-img-placeholder"></div>
         <div class="listing-info">
           <p class="listing-price" *ngIf="item.price">{{ item.price | number }} ₸</p>
           <h3 class="listing-title">{{ item.title }}</h3>
           <p class="listing-description">{{ item.description }}</p>
-          <p class="listing-meta" *ngIf="item.category">Категория: {{ item.category }}</p>
         </div>
       </div>
     </div>
+
   </section>
 
 </main>

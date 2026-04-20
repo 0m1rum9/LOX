@@ -25,8 +25,8 @@
     <div class="results">
        <p class="result-count">Найдено: {{ filteredListings.length }}</p>
         <div class="listing-row" *ngFor="let item of filteredListings" (click)="onListingClick(item.id)">
-            <div class="row-placeholder" *ngIf="!item.image"></div>
-            <img [src]="item.image" [alt]="item.title" class="row-img" *ngIf="item.image" />
+            <div class="row-placeholder" *ngIf="!item.photo"></div>
+            <img [src]="item.photo" [alt]="item.title" class="row-img" *ngIf="item.photo" />
             <div class="row-info">
                 <p class="row-price" *ngIf="item.price">{{ item.price | number }} ₸</p>
                 <h3 class="row-title">{{ item.title }}</h3>
