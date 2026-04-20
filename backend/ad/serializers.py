@@ -115,8 +115,9 @@ class AdCreateSerializer(serializers.Serializer):
             allowed_attribute_ids.extend(
                 ctg.attributes.all().values_list("id", flat=True)
             )
-
-        for attribute_value in attrs.get("attributes_values"):
+        if attrs.get("attributes_values", None) is None:
+            attrs["attributes_values"] = []
+        for attribute_value in attrs.get("attributes_values", []):
             if attribute_value.get("attribute").id not in allowed_attribute_ids:
                 raise serializers.ValidationError(
                     "this attribute is not in category attributes"
