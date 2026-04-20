@@ -98,6 +98,7 @@ class AdCreateSerializer(serializers.Serializer):
     attributes_values = AdAttributeValueCreateSerializer(
         many=True, required=False, allow_null=True
     )
+    photo = serializers.URLField(required=True)
 
     def validate(self, attrs):
         self.validate_category_attributes(attrs)

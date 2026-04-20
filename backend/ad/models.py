@@ -15,6 +15,7 @@ class Ad(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     status = models.CharField(max_length=30, choices=Status.choices)
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE)
+    photo = models.URLField(verbose_name="photo link", null=True)
 
 
 class AdAttributeValue(models.Model):

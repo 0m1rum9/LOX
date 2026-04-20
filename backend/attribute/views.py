@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.request import Request
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 
 
 from attribute.models import Attribute, AttributeEnumValue, Type
@@ -62,5 +62,6 @@ def attribute_enum_values(request: Request, id: int) -> Response:
 
 
 @api_view(http_method_names=[HTTPMethod.GET])
+@permission_classes([IsAuthenticated])
 def attribute_types(request: Request) -> Response:
     return Response(Type.values)
